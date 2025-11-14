@@ -9,6 +9,7 @@ export async function generateToken(
   const at = new AccessToken(config.livekit.apiKey, config.livekit.apiSecret, {
     identity: participantName,
     metadata,
+    ttl: '8h', // Token expires in 8 hours for security
   });
 
   at.addGrant({

@@ -1544,7 +1544,7 @@ module.exports = nextConfig;
 
 ---
 
-#### [ ] 6.4. 보안 검토
+#### [x] 6.4. 보안 검토
 **Test**: 보안 취약점 스캔
 
 **Implementation**:
