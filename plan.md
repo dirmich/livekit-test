@@ -710,7 +710,7 @@ export function useChat(room: Room | null) {
 
 ---
 
-#### [ ] 3.3. Chat UI Components 구현
+#### [x] 3.3. Chat UI Components 구현
 **Test**: 채팅 컴포넌트가 정상적으로 렌더링되는지 확인
 
 **Test Code**:
