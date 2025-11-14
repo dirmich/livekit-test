@@ -583,7 +583,7 @@ export function useRoom() {
 
 ### Phase 3: 채팅 기능 구현
 
-#### [ ] 3.1. Chat Message Type 정의
+#### [x] 3.1. Chat Message Type 정의
 **Test**: 메시지 타입이 올바르게 정의되는지 확인
 
 **Test Code**:
