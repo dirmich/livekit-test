@@ -484,7 +484,7 @@ curl "http://localhost:3000/api/token?roomName=test&participantName=user1"
 
 ---
 
-#### [ ] 2.3. Room 연결 Hook 구현
+#### [x] 2.3. Room 연결 Hook 구현
 **Test**: Room에 정상적으로 연결되는지 확인
 
 **Test Code**:
