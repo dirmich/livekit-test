@@ -42,7 +42,6 @@ Thumbs.db
 # Misc
 .vercel
 .turbo
-.claude/
 
 # Test directories
 test/
