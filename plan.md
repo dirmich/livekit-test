@@ -613,7 +613,7 @@ describe('Chat Message Type', () => {
 
 ---
 
-#### [ ] 3.2. Chat Hook 구현
+#### [x] 3.2. Chat Hook 구현
 **Test**: 채팅 메시지 송수신이 정상적으로 동작하는지 확인
 
 **Test Code**:

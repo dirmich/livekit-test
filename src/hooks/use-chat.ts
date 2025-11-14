@@ -1,0 +1,56 @@
+import { useState, useCallback, useEffect } from 'react';
+import { Room, RoomEvent, DataPacket_Kind } from 'livekit-client';
+import type { ChatMessage } from '@/types/livekit';
+
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+export function useChat(room: Room | null) {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  const sendMessage = useCallback(
+    async (message: string) => {
+      if (!room || !message.trim()) return;
+
+      const chatMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        senderId: room.localParticipant.identity,
+        senderName: room.localParticipant.name || room.localParticipant.identity,
+        message: message.trim(),
+        timestamp: Date.now(),
+      };
+
+      const data = encoder.encode(JSON.stringify(chatMessage));
+      await room.localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
+
+      setMessages((prev) => [...prev, chatMessage]);
+    },
+    [room]
+  );
+
+  useEffect(() => {
+    if (!room) return;
+
+    const handleDataReceived = (
+      payload: Uint8Array,
+      participant?: any,
+      kind?: DataPacket_Kind
+    ) => {
+      if (kind === DataPacket_Kind.RELIABLE) {
+        const message: ChatMessage = JSON.parse(decoder.decode(payload));
+        setMessages((prev) => [...prev, message]);
+      }
+    };
+
+    room.on(RoomEvent.DataReceived, handleDataReceived);
+
+    return () => {
+      room.off(RoomEvent.DataReceived, handleDataReceived);
+    };
+  }, [room]);
+
+  return {
+    messages,
+    sendMessage,
+  };
+}
