@@ -1,0 +1,2 @@
+# This directory contains Playwright E2E tests
+# Run with: bunx playwright test

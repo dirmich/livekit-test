@@ -855,7 +855,7 @@ export function ChatContainer({
 
 ---
 
-#### [ ] 3.4. Chat Test Page 구현
+#### [x] 3.4. Chat Test Page 구현
 **Test**: 채팅 페이지가 정상적으로 동작하는지 확인
 
 **Implementation**:
@@ -936,7 +936,7 @@ export default function ChatPage() {
 
 ### Phase 4: 오디오/비디오 기능 구현
 
-#### [ ] 4.1. Media Devices Hook 구현
+#### [x] 4.1. Media Devices Hook 구현
 **Test**: 미디어 디바이스 목록을 가져올 수 있는지 확인
 
 **Test Code**:
@@ -1011,7 +1011,7 @@ export function useMediaDevices() {
 
 ---
 
-#### [ ] 4.2. Participants Hook 구현
+#### [x] 4.2. Participants Hook 구현
 **Test**: 참가자 목록을 추적할 수 있는지 확인
 
 **Test Code**:
@@ -1071,7 +1071,7 @@ export function useParticipants(room: Room | null) {
 
 ---
 
-#### [ ] 4.3. Video Track Component 구현
+#### [x] 4.3. Video Track Component 구현
 **Test**: 비디오 트랙이 정상적으로 렌더링되는지 확인
 
 **Implementation**:
@@ -1112,7 +1112,7 @@ export function VideoTrack({ track, className }: VideoTrackProps) {
 
 ---
 
-#### [ ] 4.4. Participant View Component 구현
+#### [x] 4.4. Participant View Component 구현
 **Test**: 참가자 뷰가 정상적으로 렌더링되는지 확인
 
 **Implementation**:
@@ -1168,7 +1168,7 @@ export function ParticipantView({ participant, isLocal }: ParticipantViewProps) 
 
 ---
 
-#### [ ] 4.5. Room Controls Component 구현
+#### [x] 4.5. Room Controls Component 구현
 **Test**: 미디어 제어 버튼이 정상적으로 동작하는지 확인
 
 **Implementation**:
@@ -1234,7 +1234,7 @@ export function RoomControls({ room, onLeave }: RoomControlsProps) {
 
 ---
 
-#### [ ] 4.6. Video Room Page 구현
+#### [x] 4.6. Video Room Page 구현
 **Test**: 비디오 룸이 정상적으로 동작하는지 확인
 
 **Implementation**:
@@ -1304,7 +1304,7 @@ export default function RoomPage() {
 
 ### Phase 5: UI/UX 개선 (shadcn/ui)
 
-#### [ ] 5.1. Landing Page 구현
+#### [x] 5.1. Landing Page 구현
 **Test**: 랜딩 페이지가 정상적으로 렌더링되는지 확인
 
 **Implementation**:
@@ -1361,7 +1361,7 @@ export default function HomePage() {
 
 ---
 
-#### [ ] 5.2. Connection Status Component 구현
+#### [x] 5.2. Connection Status Component 구현
 **Test**: 연결 상태가 정확하게 표시되는지 확인
 
 **Implementation**:
@@ -1419,7 +1419,7 @@ export function ConnectionStatus({ state, className }: ConnectionStatusProps) {
 
 ---
 
-#### [ ] 5.3. Dark Mode 지원
+#### [x] 5.3. Dark Mode 지원
 **Test**: 다크 모드가 정상적으로 동작하는지 확인
 
 **Implementation**:
@@ -1449,7 +1449,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ### Phase 6: 테스트 및 최적화
 
-#### [ ] 6.1. E2E 테스트 설정 (Playwright)
+#### [x] 6.1. E2E 테스트 설정 (Playwright)
 **Test**: E2E 테스트가 정상적으로 실행되는지 확인
 
 **Implementation**:
@@ -1488,7 +1488,7 @@ export default defineConfig({
 
 ---
 
-#### [ ] 6.2. Chat Flow E2E 테스트
+#### [x] 6.2. Chat Flow E2E 테스트
 **Test**: 채팅 플로우가 E2E로 정상 동작하는지 확인
 
 **Implementation**:
@@ -1518,7 +1518,7 @@ test.describe('Chat Feature', () => {
 
 ---
 
-#### [ ] 6.3. Performance 최적화
+#### [x] 6.3. Performance 최적화
 **Test**: Lighthouse 성능 점수 확인
 
 **Implementation**:
