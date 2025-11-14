@@ -10,7 +10,7 @@ export function useChat(room: Room | null) {
 
   const sendMessage = useCallback(
     async (message: string) => {
-      if (!room || !message.trim()) return;
+      if (!room || !room.localParticipant || !message.trim()) return;
 
       const chatMessage: ChatMessage = {
         id: crypto.randomUUID(),

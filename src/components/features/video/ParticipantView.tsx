@@ -10,11 +10,13 @@ interface ParticipantViewProps {
 }
 
 export function ParticipantView({ participant, isLocal }: ParticipantViewProps) {
-  const videoTrack = participant.videoTracks.values().next().value?.track;
-  const audioTrack = participant.audioTracks.values().next().value?.track;
+  const videoTrack = participant.videoTracks ?
+    Array.from(participant.videoTracks.values())[0]?.track : undefined;
+  const audioTrack = participant.audioTracks ?
+    Array.from(participant.audioTracks.values())[0]?.track : undefined;
 
-  const isCameraEnabled = participant.isCameraEnabled;
-  const isMicEnabled = participant.isMicrophoneEnabled;
+  const isCameraEnabled = participant.isCameraEnabled ?? false;
+  const isMicEnabled = participant.isMicrophoneEnabled ?? false;
 
   return (
     <Card className="relative overflow-hidden aspect-video bg-gray-900">
