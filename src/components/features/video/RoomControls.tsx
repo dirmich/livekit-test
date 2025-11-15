@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Room } from 'livekit-client';
 
@@ -8,9 +8,19 @@ interface RoomControlsProps {
 }
 
 export function RoomControls({ room, onLeave }: RoomControlsProps) {
-  const [isCameraEnabled, setIsCameraEnabled] = useState(true);
-  const [isMicEnabled, setIsMicEnabled] = useState(true);
+  const [isCameraEnabled, setIsCameraEnabled] = useState(
+    room.localParticipant.isCameraEnabled
+  );
+  const [isMicEnabled, setIsMicEnabled] = useState(
+    room.localParticipant.isMicrophoneEnabled
+  );
   const [isScreenSharing, setIsScreenSharing] = useState(false);
+
+  // Sync state with actual participant state
+  useEffect(() => {
+    setIsCameraEnabled(room.localParticipant.isCameraEnabled);
+    setIsMicEnabled(room.localParticipant.isMicrophoneEnabled);
+  }, [room]);
 
   const createToggleHandler = (
     currentState: boolean,

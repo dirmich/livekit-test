@@ -23,6 +23,15 @@ export function useRoom() {
         // Connect to room
         await room.connect(url, token);
         setConnectionState(ConnectionState.Connected);
+
+        // Enable camera and microphone by default
+        try {
+          await room.localParticipant.setCameraEnabled(true);
+          await room.localParticipant.setMicrophoneEnabled(true);
+        } catch (deviceError) {
+          // Handle gracefully if devices are not available
+          console.warn('Failed to enable camera/microphone:', deviceError);
+        }
       } catch (err) {
         setError(err as Error);
         setConnectionState(ConnectionState.Disconnected);
