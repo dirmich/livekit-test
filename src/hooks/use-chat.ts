@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Room, RoomEvent, DataPacket_Kind, Participant } from 'livekit-client';
 import type { ChatMessage } from '@/types/livekit';
+import { generateUUID } from '@/lib/utils/uuid';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -13,7 +14,7 @@ export function useChat(room: Room | null) {
       if (!room || !room.localParticipant || !message.trim()) return;
 
       const chatMessage: ChatMessage = {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         senderId: room.localParticipant.identity,
         senderName: room.localParticipant.name || room.localParticipant.identity,
         message: message.trim(),
