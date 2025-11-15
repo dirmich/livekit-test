@@ -21,7 +21,7 @@ export function useChat(room: Room | null) {
       };
 
       const data = encoder.encode(JSON.stringify(chatMessage));
-      await room.localParticipant.publishData(data, DataPacket_Kind.RELIABLE);
+      await room.localParticipant.publishData(data, { reliable: true });
 
       setMessages((prev) => [...prev, chatMessage]);
     },

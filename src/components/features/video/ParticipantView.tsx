@@ -10,10 +10,10 @@ interface ParticipantViewProps {
 }
 
 export function ParticipantView({ participant, isLocal }: ParticipantViewProps) {
-  const videoTrack = participant.videoTracks ?
-    Array.from(participant.videoTracks.values())[0]?.track : undefined;
-  const audioTrack = participant.audioTracks ?
-    Array.from(participant.audioTracks.values())[0]?.track : undefined;
+  const videoTrack = participant.videoTrackPublications ?
+    Array.from(participant.videoTrackPublications.values())[0]?.track : undefined;
+  const audioTrack = participant.audioTrackPublications ?
+    Array.from(participant.audioTrackPublications.values())[0]?.track : undefined;
 
   const isCameraEnabled = participant.isCameraEnabled ?? false;
   const isMicEnabled = participant.isMicrophoneEnabled ?? false;

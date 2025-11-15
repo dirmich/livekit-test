@@ -17,7 +17,12 @@
       "Bash(mkdir:*)",
       "Bash(bunx vitest:*)",
       "Bash(bun run test:*)",
-      "Bash(bunx playwright install:*)"
+      "Bash(bunx playwright install:*)",
+      "Bash(npm test:*)",
+      "Bash(bun run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm install:*)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

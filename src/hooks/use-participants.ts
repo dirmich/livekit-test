@@ -11,8 +11,8 @@ export function useParticipants(room: Room | null) {
     }
 
     const updateParticipants = () => {
-      if (room.participants) {
-        setParticipants(Array.from(room.participants.values()));
+      if (room.remoteParticipants) {
+        setParticipants(Array.from(room.remoteParticipants.values()));
       } else {
         setParticipants([]);
       }
