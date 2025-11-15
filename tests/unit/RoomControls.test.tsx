@@ -25,4 +25,11 @@ describe('RoomControls Component', () => {
     const componentSource = RoomControls.toString();
     expect(componentSource).toContain('catch');
   });
+
+  it('should check getUserMedia availability before enabling devices', () => {
+    // Verify component checks for getUserMedia support
+    // This prevents "getUserMedia is undefined" errors on unsupported browsers
+    const componentSource = RoomControls.toString();
+    expect(componentSource).toContain('navigator.mediaDevices');
+  });
 });

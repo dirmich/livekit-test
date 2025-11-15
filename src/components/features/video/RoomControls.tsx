@@ -25,6 +25,17 @@ export function RoomControls({ room, onLeave }: RoomControlsProps) {
     enableMethod: (enabled: boolean) => Promise<unknown>
   ) => {
     return async () => {
+      // Check if getUserMedia is available (required for camera/mic access)
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error(
+          'getUserMedia is not supported in this browser. Please use a modern browser with HTTPS.'
+        );
+        alert(
+          'Camera/microphone access is not supported in this browser. Please use a modern browser with HTTPS connection.'
+        );
+        return;
+      }
+
       const newState = !currentState;
       try {
         await enableMethod(newState);
