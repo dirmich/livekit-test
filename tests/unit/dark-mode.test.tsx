@@ -24,8 +24,8 @@ describe('Dark Mode Support', () => {
     const configContent = fs.readFileSync(tailwindConfigPath, 'utf-8');
 
     // Verify dark mode is configured
-    // Tailwind CSS uses darkMode: ['class'] for class-based dark mode
-    expect(configContent).toMatch(/darkMode:\s*\[['"]class['"]\]/);
+    // Tailwind CSS supports both 'class' and ['class'] syntax
+    expect(configContent).toMatch(/darkMode:\s*(['"]class['"]|\[['"]class['"]\])/);
   });
 
   it('should have proper metadata in layout', () => {

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Room, RoomEvent, DataPacket_Kind } from 'livekit-client';
+import { Room, RoomEvent, DataPacket_Kind, Participant } from 'livekit-client';
 import type { ChatMessage } from '@/types/livekit';
 
 const encoder = new TextEncoder();
@@ -33,7 +33,7 @@ export function useChat(room: Room | null) {
 
     const handleDataReceived = (
       payload: Uint8Array,
-      participant?: any,
+      participant?: Participant,
       kind?: DataPacket_Kind
     ) => {
       if (kind === DataPacket_Kind.RELIABLE) {

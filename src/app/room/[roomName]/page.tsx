@@ -29,7 +29,7 @@ export default function RoomPage() {
     router.push('/');
   };
 
-  if (connectionState !== 'connected') {
+  if (connectionState !== 'connected' || !room) {
     return (
       <div className="flex items-center justify-center h-screen">
         <ConnectionStatus state={connectionState} />
@@ -52,7 +52,7 @@ export default function RoomPage() {
         ))}
       </div>
 
-      <RoomControls room={room!} onLeave={handleLeave} />
+      <RoomControls room={room} onLeave={handleLeave} />
     </div>
   );
 }

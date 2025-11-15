@@ -6,43 +6,34 @@ interface ConnectionStatusProps {
   className?: string;
 }
 
+interface StatusConfig {
+  color: string;
+  text: string;
+}
+
+const STATUS_MAP: Record<string, StatusConfig> = {
+  connected: { color: 'bg-green-500', text: 'Connected' },
+  connecting: { color: 'bg-yellow-500', text: 'Connecting...' },
+  reconnecting: { color: 'bg-orange-500', text: 'Reconnecting...' },
+  disconnected: { color: 'bg-red-500', text: 'Disconnected' },
+};
+
 export function ConnectionStatus({ state, className }: ConnectionStatusProps) {
-  const getStatusColor = () => {
-    switch (state) {
-      case 'connected':
-      case ConnectionState.Connected:
-        return 'bg-green-500';
-      case 'connecting':
-      case ConnectionState.Connecting:
-        return 'bg-yellow-500';
-      case 'reconnecting':
-      case ConnectionState.Reconnecting:
-        return 'bg-orange-500';
-      default:
-        return 'bg-red-500';
-    }
+  const normalizeState = (state: ConnectionState | string): string => {
+    if (state === ConnectionState.Connected) return 'connected';
+    if (state === ConnectionState.Connecting) return 'connecting';
+    if (state === ConnectionState.Reconnecting) return 'reconnecting';
+    if (typeof state === 'string') return state;
+    return 'disconnected';
   };
 
-  const getStatusText = () => {
-    switch (state) {
-      case 'connected':
-      case ConnectionState.Connected:
-        return 'Connected';
-      case 'connecting':
-      case ConnectionState.Connecting:
-        return 'Connecting...';
-      case 'reconnecting':
-      case ConnectionState.Reconnecting:
-        return 'Reconnecting...';
-      default:
-        return 'Disconnected';
-    }
-  };
+  const statusKey = normalizeState(state);
+  const config = STATUS_MAP[statusKey] || STATUS_MAP.disconnected;
 
   return (
-    <Badge className={`${getStatusColor()} text-white ${className}`}>
+    <Badge className={`${config.color} text-white ${className}`}>
       <span className="inline-block w-2 h-2 rounded-full bg-white mr-2 animate-pulse" />
-      {getStatusText()}
+      {config.text}
     </Badge>
   );
 }

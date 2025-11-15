@@ -12,24 +12,35 @@ export function RoomControls({ room, onLeave }: RoomControlsProps) {
   const [isMicEnabled, setIsMicEnabled] = useState(true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
 
-  const toggleCamera = async () => {
-    await room.localParticipant.setCameraEnabled(!isCameraEnabled);
-    setIsCameraEnabled(!isCameraEnabled);
+  const createToggleHandler = (
+    currentState: boolean,
+    setState: (value: boolean) => void,
+    enableMethod: (enabled: boolean) => Promise<void>
+  ) => {
+    return async () => {
+      const newState = !currentState;
+      await enableMethod(newState);
+      setState(newState);
+    };
   };
 
-  const toggleMic = async () => {
-    await room.localParticipant.setMicrophoneEnabled(!isMicEnabled);
-    setIsMicEnabled(!isMicEnabled);
-  };
+  const toggleCamera = createToggleHandler(
+    isCameraEnabled,
+    setIsCameraEnabled,
+    (enabled) => room.localParticipant.setCameraEnabled(enabled)
+  );
 
-  const toggleScreenShare = async () => {
-    if (isScreenSharing) {
-      await room.localParticipant.setScreenShareEnabled(false);
-    } else {
-      await room.localParticipant.setScreenShareEnabled(true);
-    }
-    setIsScreenSharing(!isScreenSharing);
-  };
+  const toggleMic = createToggleHandler(
+    isMicEnabled,
+    setIsMicEnabled,
+    (enabled) => room.localParticipant.setMicrophoneEnabled(enabled)
+  );
+
+  const toggleScreenShare = createToggleHandler(
+    isScreenSharing,
+    setIsScreenSharing,
+    (enabled) => room.localParticipant.setScreenShareEnabled(enabled)
+  );
 
   return (
     <div className="flex gap-2 justify-center p-4 bg-gray-900">
