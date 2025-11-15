@@ -15,7 +15,7 @@ export function RoomControls({ room, onLeave }: RoomControlsProps) {
   const createToggleHandler = (
     currentState: boolean,
     setState: (value: boolean) => void,
-    enableMethod: (enabled: boolean) => Promise<void>
+    enableMethod: (enabled: boolean) => Promise<unknown>
   ) => {
     return async () => {
       const newState = !currentState;

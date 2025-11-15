@@ -3,37 +3,37 @@ import fs from 'fs';
 import path from 'path';
 
 describe('Security Review', () => {
-  it('should have security middleware file', () => {
-    const middlewarePath = path.join(process.cwd(), 'src/middleware.ts');
-    expect(fs.existsSync(middlewarePath)).toBe(true);
+  it('should have security proxy file', () => {
+    const proxyPath = path.join(process.cwd(), 'src/proxy.ts');
+    expect(fs.existsSync(proxyPath)).toBe(true);
   });
 
-  it('should have security headers configured in middleware', () => {
-    const middlewarePath = path.join(process.cwd(), 'src/middleware.ts');
+  it('should have security headers configured in proxy', () => {
+    const proxyPath = path.join(process.cwd(), 'src/proxy.ts');
 
-    if (fs.existsSync(middlewarePath)) {
-      const middlewareContent = fs.readFileSync(middlewarePath, 'utf-8');
+    if (fs.existsSync(proxyPath)) {
+      const proxyContent = fs.readFileSync(proxyPath, 'utf-8');
 
       // Check for essential security headers
-      expect(middlewareContent).toContain('X-Frame-Options');
-      expect(middlewareContent).toContain('DENY');
-      expect(middlewareContent).toContain('X-Content-Type-Options');
-      expect(middlewareContent).toContain('nosniff');
-      expect(middlewareContent).toContain('Referrer-Policy');
-      expect(middlewareContent).toContain('strict-origin-when-cross-origin');
+      expect(proxyContent).toContain('X-Frame-Options');
+      expect(proxyContent).toContain('DENY');
+      expect(proxyContent).toContain('X-Content-Type-Options');
+      expect(proxyContent).toContain('nosniff');
+      expect(proxyContent).toContain('Referrer-Policy');
+      expect(proxyContent).toContain('strict-origin-when-cross-origin');
     }
   });
 
-  it('should export middleware function', () => {
-    const middlewarePath = path.join(process.cwd(), 'src/middleware.ts');
+  it('should export proxy function', () => {
+    const proxyPath = path.join(process.cwd(), 'src/proxy.ts');
 
-    if (fs.existsSync(middlewarePath)) {
-      const middlewareContent = fs.readFileSync(middlewarePath, 'utf-8');
+    if (fs.existsSync(proxyPath)) {
+      const proxyContent = fs.readFileSync(proxyPath, 'utf-8');
 
-      // Check for middleware function export
-      expect(middlewareContent).toContain('export function middleware');
-      expect(middlewareContent).toContain('NextRequest');
-      expect(middlewareContent).toContain('NextResponse');
+      // Check for proxy function export
+      expect(proxyContent).toContain('export function proxy');
+      expect(proxyContent).toContain('NextRequest');
+      expect(proxyContent).toContain('NextResponse');
     }
   });
 
