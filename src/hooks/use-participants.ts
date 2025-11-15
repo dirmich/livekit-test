@@ -18,12 +18,16 @@ export function useParticipants(room: Room | null) {
       }
     };
 
+    // Initial update
     updateParticipants();
 
+    // Listen to room events
+    room.on(RoomEvent.Connected, updateParticipants);
     room.on(RoomEvent.ParticipantConnected, updateParticipants);
     room.on(RoomEvent.ParticipantDisconnected, updateParticipants);
 
     return () => {
+      room.off(RoomEvent.Connected, updateParticipants);
       room.off(RoomEvent.ParticipantConnected, updateParticipants);
       room.off(RoomEvent.ParticipantDisconnected, updateParticipants);
     };
