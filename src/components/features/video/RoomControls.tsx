@@ -8,12 +8,9 @@ interface RoomControlsProps {
 }
 
 export function RoomControls({ room, onLeave }: RoomControlsProps) {
-  const [isCameraEnabled, setIsCameraEnabled] = useState(
-    room.localParticipant.isCameraEnabled
-  );
-  const [isMicEnabled, setIsMicEnabled] = useState(
-    room.localParticipant.isMicrophoneEnabled
-  );
+  // Start with devices disabled (user must click to enable)
+  const [isCameraEnabled, setIsCameraEnabled] = useState(false);
+  const [isMicEnabled, setIsMicEnabled] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
 
   // Sync state with actual participant state
