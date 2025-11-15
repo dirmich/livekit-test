@@ -19,8 +19,14 @@ export function RoomControls({ room, onLeave }: RoomControlsProps) {
   ) => {
     return async () => {
       const newState = !currentState;
-      await enableMethod(newState);
-      setState(newState);
+      try {
+        await enableMethod(newState);
+        setState(newState);
+      } catch (error) {
+        // Handle device errors gracefully (e.g., device not found, permissions denied)
+        console.error('Failed to toggle media device:', error);
+        // Don't update state if the operation failed
+      }
     };
   };
 

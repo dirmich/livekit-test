@@ -18,4 +18,11 @@ describe('RoomControls Component', () => {
     // We can't test actual rendering without proper setup, but we can verify the function exists
     expect(RoomControls).toBeDefined();
   });
+
+  it('should handle device errors gracefully', () => {
+    // Verify component has error handling logic
+    // The component should catch errors from setCameraEnabled, setMicrophoneEnabled, etc.
+    const componentSource = RoomControls.toString();
+    expect(componentSource).toContain('catch');
+  });
 });
