@@ -49,6 +49,7 @@ export function useRoom() {
 
     return () => {
       room.off(RoomEvent.ConnectionStateChanged, handleConnectionStateChange);
+      room.disconnect();
     };
   }, [room]);
 

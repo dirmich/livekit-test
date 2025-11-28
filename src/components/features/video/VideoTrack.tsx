@@ -22,7 +22,7 @@ export function VideoTrack({ track, className }: VideoTrackProps) {
   return (
     <video
       ref={videoRef}
-      className={`w-full h-full object-cover ${className || ''}`}
+      className={`w-full h-full object-contain ${className || ''}`}
       autoPlay
       playsInline
       muted={track.kind === Track.Kind.Video}

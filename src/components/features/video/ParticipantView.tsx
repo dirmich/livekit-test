@@ -10,17 +10,19 @@ interface ParticipantViewProps {
 }
 
 export function ParticipantView({ participant, isLocal }: ParticipantViewProps) {
-  const videoTrack = participant.videoTrackPublications ?
-    Array.from(participant.videoTrackPublications.values())[0]?.track : undefined;
-  const audioTrack = participant.audioTrackPublications ?
-    Array.from(participant.audioTrackPublications.values())[0]?.track : undefined;
+  const videoPublications = Array.from(participant.videoTrackPublications.values());
+  const screenSharePub = videoPublications.find(p => p.source === Track.Source.ScreenShare);
+  const cameraPub = videoPublications.find(p => p.source === Track.Source.Camera);
+
+  const videoTrack = (screenSharePub?.track || cameraPub?.track);
+  const isScreenShare = !!screenSharePub?.track;
 
   const isCameraEnabled = participant.isCameraEnabled ?? false;
   const isMicEnabled = participant.isMicrophoneEnabled ?? false;
 
   return (
-    <Card className="relative overflow-hidden aspect-video bg-gray-900">
-      {videoTrack && isCameraEnabled ? (
+    <Card className="relative overflow-hidden w-full h-full bg-black border-0">
+      {videoTrack && (isCameraEnabled || isScreenShare) ? (
         <VideoTrack track={videoTrack} />
       ) : (
         <div className="flex items-center justify-center h-full">
@@ -30,7 +32,9 @@ export function ParticipantView({ participant, isLocal }: ParticipantViewProps) 
         </div>
       )}
 
-      {audioTrack && !isLocal && <AudioTrack track={audioTrack} />}
+      {Array.from(participant.audioTrackPublications.values()).map((pub) => (
+        pub.track && !isLocal && <AudioTrack key={pub.trackSid} track={pub.track} />
+      ))}
 
       <div className="absolute bottom-2 left-2 flex gap-2">
         <Badge variant={isLocal ? 'default' : 'secondary'}>

@@ -24,7 +24,7 @@ export function ChatContainer({
   }, [messages]);
 
   return (
-    <Card className="flex flex-col h-full p-4">
+    <Card className="flex flex-col h-full p-4 bg-transparent border-0 shadow-none backdrop-blur-none">
       <div className="flex-1 overflow-y-auto mb-4">
         {messages.map((msg) => (
           <ChatMessage

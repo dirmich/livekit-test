@@ -12,11 +12,19 @@ export function RoomControls({ room, onLeave }: RoomControlsProps) {
   const [isCameraEnabled, setIsCameraEnabled] = useState(false);
   const [isMicEnabled, setIsMicEnabled] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
+  const [canScreenShare, setCanScreenShare] = useState(false);
 
-  // Sync state with actual participant state
+  // Sync state with actual participant state and check capabilities
   useEffect(() => {
     setIsCameraEnabled(room.localParticipant.isCameraEnabled);
     setIsMicEnabled(room.localParticipant.isMicrophoneEnabled);
+
+    // Check if screen sharing is supported (mostly desktop only)
+    setCanScreenShare(
+      typeof navigator !== 'undefined' &&
+      !!navigator.mediaDevices &&
+      'getDisplayMedia' in navigator.mediaDevices
+    );
   }, [room]);
 
   const createToggleHandler = (
@@ -77,12 +85,14 @@ export function RoomControls({ room, onLeave }: RoomControlsProps) {
       <Button variant={isMicEnabled ? 'default' : 'destructive'} onClick={toggleMic}>
         {isMicEnabled ? '🎤 Mic On' : '🔇 Mic Off'}
       </Button>
-      <Button
-        variant={isScreenSharing ? 'secondary' : 'outline'}
-        onClick={toggleScreenShare}
-      >
-        {isScreenSharing ? '🖥️ Stop Sharing' : '🖥️ Share Screen'}
-      </Button>
+      {canScreenShare && (
+        <Button
+          variant={isScreenSharing ? 'secondary' : 'outline'}
+          onClick={toggleScreenShare}
+        >
+          {isScreenSharing ? '🖥️ Stop Sharing' : '🖥️ Share Screen'}
+        </Button>
+      )}
       <Button variant="destructive" onClick={onLeave}>
         Leave Room
       </Button>

@@ -25,9 +25,13 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Type a message..."
         disabled={disabled}
-        className="flex-1"
+        className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus-visible:ring-blue-500/50"
       />
-      <Button type="submit" disabled={disabled || !message.trim()}>
+      <Button
+        type="submit"
+        disabled={disabled || !message.trim()}
+        className="bg-blue-600 hover:bg-blue-700 text-white"
+      >
         Send
       </Button>
     </form>
