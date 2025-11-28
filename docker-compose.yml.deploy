@@ -9,3 +9,14 @@ services:
       - "3000:3000"
     env_file:
       - .env.docker
+
+    networks:
+      frontend:
+        ipv4_address: 10.0.0.61
+networks:
+  frontend:
+    name: frontend
+    external: true
+  backend:
+    name: backend
+    external: true
