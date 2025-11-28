@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  app:
+    image: dirmich/highmaru-chat:latest
+    container_name: highmaru-chat
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.docker
