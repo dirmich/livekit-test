@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: 'Testing LiveKit features including chat and video',
 };
 
+import { LanguageProvider } from '@/contexts/LanguageContext';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -16,7 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={outfit.className}>{children}</body>
+      <body className={outfit.className}>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

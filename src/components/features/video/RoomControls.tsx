@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Room } from 'livekit-client';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface RoomControlsProps {
   room: Room;
@@ -8,6 +9,7 @@ interface RoomControlsProps {
 }
 
 export function RoomControls({ room, onLeave }: RoomControlsProps) {
+  const { t } = useLanguage();
   // Start with devices disabled (user must click to enable)
   const [isCameraEnabled, setIsCameraEnabled] = useState(false);
   const [isMicEnabled, setIsMicEnabled] = useState(false);
@@ -80,21 +82,21 @@ export function RoomControls({ room, onLeave }: RoomControlsProps) {
         variant={isCameraEnabled ? 'default' : 'destructive'}
         onClick={toggleCamera}
       >
-        {isCameraEnabled ? '📹 Camera On' : '📷 Camera Off'}
+        {isCameraEnabled ? `📹 ${t.controls.cameraOn}` : `📷 ${t.controls.cameraOff}`}
       </Button>
       <Button variant={isMicEnabled ? 'default' : 'destructive'} onClick={toggleMic}>
-        {isMicEnabled ? '🎤 Mic On' : '🔇 Mic Off'}
+        {isMicEnabled ? `🎤 ${t.controls.micOn}` : `🔇 ${t.controls.micOff}`}
       </Button>
       {canScreenShare && (
         <Button
           variant={isScreenSharing ? 'secondary' : 'outline'}
           onClick={toggleScreenShare}
         >
-          {isScreenSharing ? '🖥️ Stop Sharing' : '🖥️ Share Screen'}
+          {isScreenSharing ? `🖥️ ${t.controls.stopSharing}` : `🖥️ ${t.controls.screenShare}`}
         </Button>
       )}
       <Button variant="destructive" onClick={onLeave}>
-        Leave Room
+        {t.controls.leave}
       </Button>
     </div>
   );

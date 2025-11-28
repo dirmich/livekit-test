@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -8,6 +9,7 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ onSend, disabled }: ChatInputProps) {
+  const { t } = useLanguage();
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -23,7 +25,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
       <Input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message..."
+        placeholder={t.chat.placeholder}
         disabled={disabled}
         className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus-visible:ring-blue-500/50"
       />
@@ -32,7 +34,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         disabled={disabled || !message.trim()}
         className="bg-blue-600 hover:bg-blue-700 text-white"
       >
-        Send
+        {t.chat.send}
       </Button>
     </form>
   );

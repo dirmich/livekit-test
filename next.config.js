@@ -6,6 +6,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['livekit-client'],
   },
+  output: 'standalone',
 };
 
 module.exports = nextConfig;

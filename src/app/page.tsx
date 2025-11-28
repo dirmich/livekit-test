@@ -1,234 +1,239 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Video, MessageSquare, Users, Plus, RefreshCw, User, LogOut } from 'lucide-react';
+import { Video, Users, Sparkles, Globe } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/features/i18n/LanguageSelector';
 
-interface Room {
+interface RoomInfo {
   name: string;
-  sid: string;
   numParticipants: number;
   creationTime: number;
 }
 
-export default function HomePage() {
+export default function Home() {
   const router = useRouter();
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const { t } = useLanguage();
+  const [rooms, setRooms] = useState<RoomInfo[]>([]);
+  const [newRoomName, setNewRoomName] = useState('');
   const [userName, setUserName] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [newRoomName, setNewRoomName] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchRooms = async () => {
-    try {
-      setIsRefreshing(true);
-      const res = await fetch('/api/rooms');
-      if (res.ok) {
-        const data = await res.json();
-        setRooms(data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch rooms:', error);
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
-    }
-  };
-
+  // Fetch active rooms
   useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await fetch('/api/rooms');
+        const data = await response.json();
+        setRooms(data);
+      } catch (error) {
+        console.error('Failed to fetch rooms:', error);
+      }
+    };
+
     fetchRooms();
-    const savedName = localStorage.getItem('livekit-username');
-    if (savedName) {
-      setUserName(savedName);
-    }
+    const interval = setInterval(fetchRooms, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (userName.trim()) {
-      localStorage.setItem('livekit-username', userName.trim());
       setIsLoggedIn(true);
     }
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUserName('');
-    localStorage.removeItem('livekit-username');
   };
 
   const handleCreateRoom = (e: React.FormEvent) => {
     e.preventDefault();
     if (newRoomName.trim() && userName.trim()) {
-      router.push(`/room/${encodeURIComponent(newRoomName.trim())}?participantName=${encodeURIComponent(userName.trim())}`);
+      router.push(`/room/${encodeURIComponent(newRoomName)}?participantName=${encodeURIComponent(userName)}`);
     }
   };
 
   const handleJoinRoom = (roomName: string) => {
     if (userName.trim()) {
-      router.push(`/room/${encodeURIComponent(roomName)}?participantName=${encodeURIComponent(userName.trim())}`);
+      router.push(`/room/${encodeURIComponent(roomName)}?participantName=${encodeURIComponent(userName)}`);
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-6xl pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
-
-      <div className="relative z-10 max-w-4xl w-full">
-        <div className="text-center mb-12 space-y-4">
-          <h1 className="text-6xl font-bold tracking-tight mb-2">
-            <span className="text-gradient">LiveKit</span> Lobby
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            {isLoggedIn
-              ? `Welcome back, ${userName}`
-              : 'Enter your name to get started'}
-          </p>
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-500/20 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-500/20 rounded-full blur-[120px] animate-pulse delay-1000" />
         </div>
 
-        {!isLoggedIn ? (
-          /* Login Screen */
-          <Card className="p-8 glass-panel border-0 max-w-md mx-auto">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-xl bg-green-500/20 text-green-400">
-                <User className="w-6 h-6" />
-              </div>
-              <h2 className="text-2xl font-bold text-white">Your Identity</h2>
+        {/* Language Toggle */}
+        <div className="absolute top-4 right-4 z-50">
+          <LanguageSelector />
+        </div>
+
+        <Card className="w-full max-w-md p-8 bg-white/5 backdrop-blur-xl border-white/10 relative z-10">
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-16 h-16 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20 animate-float">
+              <Video className="w-8 h-8 text-white" />
             </div>
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-2">
-                <label htmlFor="userName" className="text-sm font-medium text-gray-300">
-                  Display Name
-                </label>
-                <Input
-                  id="userName"
-                  placeholder="Enter your name..."
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 h-12 text-lg"
-                  autoFocus
-                />
-              </div>
-              <Button
-                type="submit"
-                disabled={!userName.trim()}
-                className="w-full h-12 text-lg bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-500/25 border-0"
-              >
-                Enter Lobby
-              </Button>
-            </form>
-          </Card>
-        ) : (
-          /* Dashboard Screen */
-          <div className="space-y-6">
-            <div className="flex justify-end">
-              <Button
-                variant="ghost"
-                onClick={handleLogout}
-                className="text-gray-400 hover:text-white hover:bg-white/10"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Change Name
-              </Button>
+            <h1 className="text-3xl font-bold text-white mb-2">{t.home.title}</h1>
+            <p className="text-gray-400 text-center">{t.home.enterName}</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                type="text"
+                placeholder={t.home.namePlaceholder}
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 h-12 text-lg text-center focus-visible:ring-blue-500/50"
+                autoFocus
+              />
             </div>
+            <Button
+              type="submit"
+              className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium text-lg shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02]"
+              disabled={!userName.trim()}
+            >
+              {t.home.login}
+            </Button>
+          </form>
+        </Card>
+      </div>
+    );
+  }
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Create Room Section */}
-              <Card className="p-8 glass-panel border-0 h-full">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 rounded-xl bg-blue-500/20 text-blue-400">
-                    <Plus className="w-6 h-6" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-white">Create Room</h2>
-                </div>
-                <form onSubmit={handleCreateRoom} className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="roomName" className="text-sm font-medium text-gray-300">
-                      Room Name
-                    </label>
-                    <Input
-                      id="roomName"
-                      placeholder="Enter room name..."
-                      value={newRoomName}
-                      onChange={(e) => setNewRoomName(e.target.value)}
-                      className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 h-12"
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    disabled={!newRoomName.trim()}
-                    className="w-full h-12 text-lg bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 border-0"
-                  >
-                    Create & Join
-                  </Button>
-                </form>
-              </Card>
+  return (
+    <div className="min-h-screen bg-gray-950 text-white p-4 md:p-8 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-blue-600/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-purple-600/10 rounded-full blur-[150px]" />
+      </div>
 
-              {/* Active Rooms List */}
-              <Card className="p-8 glass-panel border-0 h-full flex flex-col">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-purple-500/20 text-purple-400">
-                      <Users className="w-6 h-6" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-white">Active Rooms</h2>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={fetchRooms}
-                    disabled={isRefreshing}
-                    className="hover:bg-white/10 text-gray-400 hover:text-white"
-                  >
-                    <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
-                  </Button>
-                </div>
-
-                <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar min-h-[200px]">
-                  {isLoading ? (
-                    <div className="text-center py-8 text-gray-500">Loading rooms...</div>
-                  ) : rooms.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500 flex flex-col items-center gap-2">
-                      <MessageSquare className="w-8 h-8 opacity-20" />
-                      <p>No active rooms found.</p>
-                      <p className="text-sm">Create one to get started!</p>
-                    </div>
-                  ) : (
-                    rooms.map((room) => (
-                      <div
-                        key={room.sid}
-                        onClick={() => handleJoinRoom(room.name)}
-                        className="group p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all cursor-pointer flex items-center justify-between"
-                      >
-                        <div>
-                          <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">
-                            {room.name}
-                          </h3>
-                          <p className="text-xs text-gray-500 mt-1">
-                            Created {new Date(room.creationTime * 1000).toLocaleTimeString()}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-400 bg-black/20 px-3 py-1 rounded-full text-xs">
-                          <Users className="w-3 h-3" />
-                          <span>{room.numParticipants}</span>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </Card>
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <Video className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold">{t.home.title}</h1>
+              <p className="text-gray-400 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                {t.home.welcome} <span className="text-white font-medium">{userName}</span>
+              </p>
             </div>
           </div>
-        )}
+
+          <div className="flex items-center gap-4">
+            {/* Language Toggle */}
+            <LanguageSelector />
+
+            <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+              <Users className="w-4 h-4 text-blue-400" />
+              <span className="text-sm font-medium">{rooms.reduce((acc, room) => acc + room.numParticipants, 0)} Online</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-[350px_1fr] gap-8">
+          {/* Create Room Section */}
+          <div className="space-y-6">
+            <Card className="p-6 bg-white/5 backdrop-blur-xl border-white/10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-blue-500/20 rounded-lg">
+                  <Sparkles className="w-5 h-5 text-blue-400" />
+                </div>
+                <h2 className="text-lg font-semibold">{t.home.createRoom}</h2>
+              </div>
+
+              <form onSubmit={handleCreateRoom} className="space-y-4">
+                <Input
+                  placeholder={t.home.roomNamePlaceholder}
+                  value={newRoomName}
+                  onChange={(e) => setNewRoomName(e.target.value)}
+                  className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 focus-visible:ring-blue-500/50"
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20"
+                  disabled={!newRoomName.trim()}
+                >
+                  {t.home.create}
+                </Button>
+              </form>
+            </Card>
+
+            <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-white/5">
+              <h3 className="text-sm font-medium text-gray-300 mb-2">{t.home.tip}</h3>
+              <p className="text-xs text-gray-400 leading-relaxed">
+                {t.home.tipDescription}
+              </p>
+            </div>
+          </div>
+
+          {/* Active Rooms List */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                {t.home.activeRooms}
+                <span className="text-sm font-normal text-gray-500 bg-white/5 px-2 py-0.5 rounded-full ml-2">
+                  {rooms.length}
+                </span>
+              </h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              {rooms.map((room) => (
+                <Card
+                  key={room.name}
+                  className="group p-5 bg-white/5 hover:bg-white/10 backdrop-blur-md border-white/10 transition-all hover:scale-[1.02] hover:border-blue-500/30 cursor-pointer"
+                  onClick={() => handleJoinRoom(room.name)}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="font-medium text-lg text-white group-hover:text-blue-400 transition-colors">
+                      {room.name}
+                    </h3>
+                    <span className="flex items-center gap-1.5 text-xs font-medium bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                      Live
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-sm text-gray-400">
+                    <div className="flex items-center gap-4">
+                      <span className="flex items-center gap-1.5">
+                        <Users className="w-4 h-4" />
+                        {room.numParticipants}
+                      </span>
+                      <span className="text-xs opacity-50">
+                        {new Date(room.creationTime).toLocaleTimeString()}
+                      </span>
+                    </div>
+                    <Button variant="ghost" size="sm" className="text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 -mr-2">
+                      {t.home.join} →
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+
+              {rooms.length === 0 && (
+                <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500 border-2 border-dashed border-white/10 rounded-2xl bg-white/5">
+                  <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
+                    <Video className="w-8 h-8 opacity-20" />
+                  </div>
+                  <p>{t.home.noActiveRooms}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

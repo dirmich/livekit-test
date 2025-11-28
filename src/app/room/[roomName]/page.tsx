@@ -9,8 +9,11 @@ import { ChatContainer } from '@/components/features/chat/ChatContainer';
 import { useRoom } from '@/hooks/use-room';
 import { useParticipants } from '@/hooks/use-participants';
 import { useChat } from '@/hooks/use-chat';
-import { Users, ChevronDown, ChevronUp, LayoutGrid, MessageSquare } from 'lucide-react';
+import { Users, ChevronDown, ChevronUp, LayoutGrid, MessageSquare, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Language } from '@/lib/i18n/types';
+import { LanguageSelector } from '@/components/features/i18n/LanguageSelector';
 
 export default function RoomPage() {
   const params = useParams();
@@ -19,6 +22,7 @@ export default function RoomPage() {
   const roomName = decodeURIComponent(params.roomName as string);
   const participantName = searchParams.get('participantName');
 
+  const { t } = useLanguage();
   const { room, connectionState, connect, disconnect } = useRoom();
   const { participants, localParticipant } = useParticipants(room);
   const { messages, sendMessage } = useChat(room);
@@ -84,6 +88,7 @@ export default function RoomPage() {
                 <Users className="w-3 h-3" />
                 <span>{remoteParticipants.length}</span>
               </div>
+              <LanguageSelector />
               <Button
                 variant="ghost"
                 size="sm"
@@ -126,7 +131,7 @@ export default function RoomPage() {
               ))}
               {remoteParticipants.length === 0 && (
                 <div className="text-xs text-gray-500 py-2 px-1">
-                  Waiting for others...
+                  {t.room.waiting}
                 </div>
               )}
             </div>
@@ -158,7 +163,7 @@ export default function RoomPage() {
           onClick={() => setIsListExpanded(false)} // Click background to close
         >
           <div className="h-14 px-4 flex items-center justify-between border-b border-white/10" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-lg font-bold text-white">Participants ({remoteParticipants.length})</h2>
+            <h2 className="text-lg font-bold text-white">{t.room.participants} ({remoteParticipants.length})</h2>
             <Button
               variant="ghost"
               size="sm"
@@ -193,7 +198,7 @@ export default function RoomPage() {
             {remoteParticipants.length === 0 && (
               <div className="flex flex-col items-center justify-center h-64 text-gray-500">
                 <Users className="w-12 h-12 mb-4 opacity-20" />
-                <p>No other participants yet.</p>
+                <p>{t.room.waiting}</p>
               </div>
             )}
           </div>
